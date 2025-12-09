@@ -1,0 +1,86 @@
+---
+title: "SiteSelectR_Intro"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SiteSelectR_Intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Input project information here ****
+
+
+
+
+```{r setup}
+library(SiteSelectR)
+```
+
+The SiteSelectR library works with the terra and sf  libraries. Both are used in SiteSelectR to handle raster data (terra) and vectorized shapefile data (sf). 
+```{r}
+library(terra)
+library(sf)
+```
+
+The general outline of SiteSelectR consists of five steps: (i) define the region in which to select sites as a spatial polygon; (ii) characterize the environmental conditions (e.g., elevation, land use, road density) within the region using geospatial data; (iii) calculate the dissimilarity in the environmental conditions among all sites using multivariate Mahalanobis distance – the region can be filtered to only accessible locations (e.g., public land); (iv) select a starting location (arbitrary) and select the most dissimilar site to the starting location; (v) recalculate the dissimilarity among all non-selected cells to the suite of conditions represented in the network. Iterate until the number of desired sampling sites. 
+
+First, randomly generate 3 rasters from a normal distribution to run in the vignette for SiteSelectR.
+```{r}
+
+r1<-terra::rast(matrix(rnorm(400, mean=0, sd=1), 
+                       nrow=20, ncol=20), crs="EPSG:4326")
+r2<-terra::rast(matrix(rnorm(400, mean=0, sd=1), 
+                       nrow=20, ncol=20), crs="EPSG:4326")
+r3<-terra::rast(matrix(rnorm(400, mean=0, sd=1), 
+                       nrow=20, ncol=20), crs="EPSG:4326")
+```
+
+The sampling extent can be a park or other boundary defined by a vectorized shapefile. We demonstrate the sample_ext() function which creates a sampling extent a out from a central starting location. 
+
+The sample_ext() function writes a vectorized point using the sf package from latitude/longitude coordinates - then projects the point in the World Geodetic System (WGS) 84 coordinate reference system (CRS). The sample extent is calculated using the radius value supplied by the user. Here we use 750,000 meters (m) and the coordinates 10.0, 12.0 of our simulated rasters. 
+
+```{r}
+sampling_extent<-sample_ext(x=10.0, y=12.0, 750000)
+head(sampling_extent)
+```
+Let's visualize the sampling extent on one of the rasters. We arbitrarily chose the first simulated raster to visualize this. We will exclude all cells outside the circle during site selection. 
+```{r}
+plot(r1) ; lines(extent, col='red')
+
+```
+
+
+Use rast_collect() to take a set of rasters and collect them in a list. 
+```{r}
+r_list<-rast_collect(r1, r2, r3)
+head(r_list)
+```
+
+Use rast_match() to resample the raster list to the same extent, resolution, and CRS.  rast_match() takes the product of r_list() - a list of rasters and resamples them following the extent, resolution, and CRS of a reference raster().
+```{r}
+r_resampled<-rast_match(raster_list = r_list, 
+                        reference_layer = r_list[[1]], 
+                        extent = sampling_extent)
+head(r_resampled)
+```
+As a final data preparation step, use rast_stack(). This function takes the resampled rasters from rast_match() and stacks them into a single spatial object. Then, rast_stack() crops the raster stack to the sampling extent. 
+```{r}
+r_stack<-rast_stack(r_resampled, sampling_extent)
+names(r_stack)<-c("Raster 1", "Raster 2", "Raster 3")
+
+plot(r_stack)
+
+```
+
+Now that we have a raster stack where each raster is projected to the same resolution, extent, and CRS, we can build the distance matrix.
+
+The rast_distance() function measures the dissimilarity between cell of the raster stack relative to the mean distribution. The covariance matrix is calculated
+
+
