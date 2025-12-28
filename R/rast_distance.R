@@ -1,4 +1,4 @@
-#' The rast_distance() function measures the initial dissimilarity present in the raster stack data without considering any chosen sampling sites.
+#' The rast_distance() function measures the initial dissimilarity present in raster data without considering any chosen sampling sites.
 #'
 #' This function uses the Mahalanobis distance calculation to measure multivariate dissimilarity.
 #'

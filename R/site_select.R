@@ -7,8 +7,9 @@
 #'
 #' 'stack' refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.
 
-site_select<-function(long, lat, num,
-                      data, stack){
+site_select<-function(long, lat, num, stack){
+  # create a matrix from the raster stack
+  data<-as.matrix(stack)
 
   # create ref layer
   ref<-stack[[1]]
@@ -16,7 +17,7 @@ site_select<-function(long, lat, num,
 
   # first site selection
   cell1<-terra::cellFromXY(ref, cbind(long, lat))
-  cell2<-max_cell(first_distance(data))
+  cell2<-max_cell(rast_distance(data))
   cells<-c(cell1, cell2)
 
   # use cell 1 and 2 to pick other sites, each iteration will calculate a new distance matrix between chosen and unchosen cells.

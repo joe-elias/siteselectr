@@ -2,13 +2,13 @@
 % Please edit documentation in R/sample_ext.R
 \name{sample_ext}
 \alias{sample_ext}
-\title{The functions is meant for those interested in creating a simple sampling circumfrence around a central location as sampling extent.}
+\title{The functions is meant for those interested in calculating a sampling circle around a central location.}
 \usage{
-sample_ext(x, y, radius)
+sample_ext(x, y, radius, crs)
 }
 \description{
-The sampling extent is used in the raster_match() function.
+Whether using the sample_ext() function or a pre-loaded shapefile, a sample extent is needed for site_select().
 }
 \details{
-x=latitude, y=longitude, 'radius' refers to the radius of the sampling circumfrence.
+x=latitude, y=longitude, 'radius'=desired radius of the circumference, and crs requires an EPSG code.
 }

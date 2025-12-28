@@ -17,6 +17,4 @@ heat_distance<-function(stack){
   values(mahal_raster) <- distance_matrix
 
   mahal_trim<-terra::trim(mahal_raster)
-
-  plot(mahal_trim)
 }

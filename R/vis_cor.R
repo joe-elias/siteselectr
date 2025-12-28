@@ -8,7 +8,7 @@ vis_cor<-function(values){
   cor_val<-cor(values)
   palette <- colorRampPalette(c("#56B4E9", "white", "orangered"))(100)
 
-  heatmap(cor_matrix,
+  heatmap(cor_val,
           col = palette,
           symm = TRUE, # Ensures symmetry for correlation matrix
           margins = c(8, 8))
@@ -16,6 +16,5 @@ vis_cor<-function(values){
 }
 
 
-usethis::use_vignette("SiteSelectR_Intro")
 
 

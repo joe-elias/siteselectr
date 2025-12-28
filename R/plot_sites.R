@@ -9,8 +9,9 @@
 
 plot_sites<-function(cells, stack){
   site_xy<-terra::xyFromCell(stack[[1]], cells)
-  plot(stack[[1]])
-  points(site_xy, pch=19, cex=1.5, col='red')
 
+  plot(stack[[1]])
+  points(site_xy, col='red', pch=19)
   return(site_xy)
+
 }

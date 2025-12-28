@@ -1,6 +1,6 @@
-#' Used to collect a set of rasters into a list to be used in the smooth_raster() function.
+#' Used to collect a set of rasters into a list.
 #'
-#' Input any variable number of rasters by their assigned object name.
+#' Input any number of raster objects and combine them using list().
 
 rast_collect<-function(...){
   r_list<-list(...)

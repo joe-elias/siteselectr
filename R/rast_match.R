@@ -1,9 +1,9 @@
 #' Align raster data to the same extent and resolution.
 #'
-#' 'reference_layer' refers to the raster that others will be projected to.
-#' 'extent' refers to the spatial boundaries that the rasters will be cropped to.
+#' 'reference_layer' refers to the raster that everything will be projected.
+#' 'extent' refers to the spatial boundary that the rasters will be cropped. This is the output of sample_ext().
 #'
-#' Rasters need to be aligned and projected to the same resolution and CRS before condensing into a raster stack and before calculating a distance matrix.
+#' Rasters need to be aligned and projected to the same resolution and CRS before condensing into a raster stack and calculating a distance matrix.
 
 
 rast_match<-function(raster_list, reference_layer, extent){

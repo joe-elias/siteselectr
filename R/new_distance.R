@@ -1,8 +1,8 @@
 #' Create a new matrix using the baseline (with chosen cells) and comparison (without chosen cells) matrices.
 #'
-#' calculates Mahalanobis distance between the comparison and baseline set of cells.
+#' calculates Mahalanobis distance between a comparison and baseline set of cells.
 #'
-#' 'df' refers to the raw data matrix of combined raster layers.
+#' 'data' refers to the raw data matrix of combined raster layers.
 #'
 #' 'cells' refers to the cells already chosen
 #'

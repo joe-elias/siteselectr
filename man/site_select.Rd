@@ -5,7 +5,7 @@
 \title{Choose a set of sites from the new distance matrix.
 see comparison(), baseline(), & new_distance() functions.}
 \usage{
-site_select(long, lat, num, data, stack)
+site_select(long, lat, num, stack)
 }
 \description{
 'num' refers the number of rounds of site selection.

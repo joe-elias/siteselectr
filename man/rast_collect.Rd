@@ -2,10 +2,10 @@
 % Please edit documentation in R/rast_collect.R
 \name{rast_collect}
 \alias{rast_collect}
-\title{Used to collect a set of rasters into a list to be used in the smooth_raster() function.}
+\title{Used to collect a set of rasters into a list.}
 \usage{
 rast_collect(...)
 }
 \description{
-Input any variable number of rasters by their assigned object name.
+Input any number of raster objects and combine them using list().
 }
