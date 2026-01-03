@@ -7,10 +7,10 @@
 new_distance(data, cells)
 }
 \description{
-calculates Mahalanobis distance between the comparison and baseline set of cells.
+calculates Mahalanobis distance between a comparison and baseline set of cells.
 }
 \details{
-'df' refers to the raw data matrix of combined raster layers.
+'data' refers to the raw data matrix of combined raster layers.
 
 'cells' refers to the cells already chosen
 }

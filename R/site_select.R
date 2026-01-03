@@ -1,13 +1,14 @@
 #' Choose a set of sites from the new distance matrix.
 #' see comparison(), baseline(), & new_distance() functions.
 #'
-#' 'num' refers the number of rounds of site selection.
+#' 'num' refers the number of rounds of site selection added to existing cells/sites.
 #'
 #' 'cells' refers to the starting location and cell with the highest dissimilarity
 #'
 #' 'stack' refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.
 
 site_select<-function(long, lat, num, stack){
+
   # create a matrix from the raster stack
   data<-as.matrix(stack)
 
@@ -20,8 +21,10 @@ site_select<-function(long, lat, num, stack){
   cell2<-max_cell(rast_distance(data))
   cells<-c(cell1, cell2)
 
+  n<-num-length(cells)
+
   # use cell 1 and 2 to pick other sites, each iteration will calculate a new distance matrix between chosen and unchosen cells.
-  for (i in 1:num){
+  for (i in 1:n){
     new_dist<-new_distance(data, cells)
     tmp.r<-as.matrix(ref)
     tmp.r[!is.na(tmp.r)] <- NA

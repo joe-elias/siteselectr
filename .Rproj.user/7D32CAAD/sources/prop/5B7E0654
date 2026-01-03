@@ -1,7 +1,12 @@
 {
     "source_window_id": "",
     "Source": "Source",
-    "cursorPosition": "29,28",
-    "scrollLine": "26",
-    "last_setup_crc32": "fd73dbc7d9d4190"
+    "cursorPosition": "15,0",
+    "scrollLine": "1",
+    "last_setup_crc32": "",
+    "docOutlineVisible": "0",
+    "rmdVisualMode": "false",
+    "rmdVisualCollapsedChunks": "",
+    "rmdVisualModeLocation": "2:0",
+    "rmdVisualWrapConfigured": "true"
 }

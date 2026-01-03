@@ -8,7 +8,7 @@ see comparison(), baseline(), & new_distance() functions.}
 site_select(long, lat, num, stack)
 }
 \description{
-'num' refers the number of rounds of site selection.
+'num' refers the number of rounds of site selection added to existing cells/sites.
 }
 \details{
 'cells' refers to the starting location and cell with the highest dissimilarity

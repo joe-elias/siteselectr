@@ -2,15 +2,14 @@
 % Please edit documentation in R/plot_sites.R
 \name{plot_sites}
 \alias{plot_sites}
-\title{This function uses the cells chosen in the site_select() function.}
+\title{This function uses the cells chosen in the site_select() function.
+Converts cells to geographic coordinates and plots on the first layer of the raster stack.}
 \usage{
 plot_sites(cells, stack)
 }
 \description{
-Converts cells to geographic coordinates and plots on the first layer of the raster stack.
+'cells' refers to the output of site_select().
 }
 \details{
-'cells' refers to the output of site_select().
-
 'stack', refers to the raster stack used as a reference to extract the geographic locations.
 }
