@@ -222,3 +222,24 @@ vis_rep(values=cell_values, stack=r_stack, layer1 = 1,
 ```
 
 ## Weighted Approach 
+
+The Mahalanobis distance equation is designed to treat all parameters equally. However, a common practice in ecological monitoring is to focus on one or a few variables while still accounting for other multivariate influence. **SiteSelectR** offers a modified version of our general approach, `site_select_wt`, which weights specific raster layers entered into the Mahalanobis calculation. The Mahalanobis calculation used in `site_select_wt` is modified from the `wmahalanobis` function in the **WMDB** package (Wu, 2012).
+
+```{r}
+weighted_cells<-site_select_wt(long=12, lat=10, num=15, stack=r_stack, 
+                               weighted_layer = c(1, 3), magnitude = 0.5)
+print(weighted_cells)
+```
+
+```{r}
+weighted_sites<-plot_sites(weighted_cells, r_stack)
+```
+
+site_select_wt works the same as site_select - cells are chosen based on their maximum dissimilarity from unselected cells. Our weighted approach applies a diagonal of weighted
+
+```{r}
+wt_mat <- rast_distance_wt(stack=r_stack, weighted_layer=c(1,4), magnitude=0.7)
+summary(wt_mat)
+```
+
+## Citations 
