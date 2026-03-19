@@ -1,10 +1,10 @@
-#' Creates a matrix with the values of the sites at each layer of raster data.
+#' This function creates a matrix with the values of the sites at each layer of raster data.
 #'
-#' The matrix is the correct format to use in ggbiplot which is the suggested visual to view representativeness of sites relative to the raw raster data.
+#' @param sites the site coordinates from the plot_sites() function.
 #'
-#' Input is 'sites', the site coordinates from the plot_sites() function.
-#'
-#' 'Stack' refers to the output of rast_stack().
+#' @param stack raster stack.
+#' @return the values of each variable in the raster stack at each selected cell during site selection.
+#' @export
 
 site_val<-function(sites, stack){
   site_val<-data.frame(terra::extract(stack, sites))

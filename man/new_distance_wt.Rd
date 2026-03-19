@@ -2,12 +2,28 @@
 % Please edit documentation in R/new_distance_wt.R
 \name{new_distance_wt}
 \alias{new_distance_wt}
-\title{modified version of new_distance function, based on the wmahalanobis function in the WMDB package (Wu, 2012).
-'cells' refers to the already selected cells, 'dat' to the raster matrix.}
+\title{Modified version of new_distance function, based on the wmahalanobis function in the WMDB package (Wu, 2012).
+Used within the site_select_wt() function.}
 \usage{
-new_distance_wt(cells, dat)
+new_distance_wt(stack, weighted_layer, cells, magnitude, dat)
+}
+\arguments{
+\item{stack}{raster stack.}
+
+\item{weighted_layer}{a single or mutliple numbers refering to the subset of the raster stack (which layer) to be weighted.}
+
+\item{cells}{selected cells, 'dat' to the raster matrix.}
+
+\item{magnitude}{a weight 0.1-1.0 to place on the weighted layer.
+All other layers are set to 0.001. Weighted layer is weighted proportionally to other layers.}
+}
+\value{
+New distance metrics measured between the original distance matrix - see rast_distance_wt() function - and the original distance matrix minus already selected cells.
+
+Example:
+weighted_cells<-site_select_wt(long=12, lat=10, num=15, stack=r_stack, weighted_layer = c(1, 3), magnitude = 0.5)
 }
 \description{
-modified version of new_distance function, based on the wmahalanobis function in the WMDB package (Wu, 2012).
-'cells' refers to the already selected cells, 'dat' to the raster matrix.
+Modified version of new_distance function, based on the wmahalanobis function in the WMDB package (Wu, 2012).
+Used within the site_select_wt() function.
 }

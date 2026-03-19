@@ -2,13 +2,26 @@
 % Please edit documentation in R/sample_ext.R
 \name{sample_ext}
 \alias{sample_ext}
-\title{The functions is meant for those interested in calculating a sampling circle around a central location.}
+\title{Create a sampling circle around a central location}
 \usage{
 sample_ext(x, y, radius, crs)
 }
-\description{
-Whether using the sample_ext() function or a pre-loaded shapefile, a sample extent is needed for site_select().
+\arguments{
+\item{x}{Latitude of the center point.}
+
+\item{y}{Longitude of the center point.}
+
+\item{radius}{Desired radius of the sampling circle (in the units of the CRS).}
+
+\item{crs}{EPSG code defining the coordinate reference system (CRS)}
 }
-\details{
-x=latitude, y=longitude, 'radius'=desired radius of the circumference, and crs requires an EPSG code.
+\value{
+A polygon (circle) representing the sampling extent. Used in the site_select() function.
+
+Example:
+sample_ext(lat, long, 100000 #meters, crs=4326)
+}
+\description{
+This function is meant for users who want to calculate a sampling circle
+around a central point. Whether using \code{sample_ext} directly or supplying a pre‑loaded shapefile, a sample extent is required for \code{site_select}.
 }

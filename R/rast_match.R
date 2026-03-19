@@ -1,15 +1,17 @@
-#' Align raster data to the same extent and resolution.
+#' Resample raster data to the same extent and resolution.
 #'
-#' 'reference_layer' refers to the raster that everything will be projected.
-#' 'extent' refers to the spatial boundary that the rasters will be cropped. This is the output of sample_ext().
+#' @param rast_list List of rasters from the rast_collect function.
+#' @param reference_layer A target layer for resampling. Written as a subset of
+#' the object.
 #'
-#' Rasters need to be aligned and projected to the same resolution and CRS before condensing into a raster stack and calculating a distance matrix.
+#' @param extent The product of sample_ext - a vectorized polygon to crop the rasters.
+#'
+#' @export
 
-
-rast_match<-function(raster_list, reference_layer, extent){
-  lapply(raster_list, function(x){
-    extent <- st_transform(extent, crs(x))
-    crop_rast <- project(crop(x, extent), "EPSG:4326")
+rast_match<-function(rast_list, reference_layer, extent){
+  lapply(rast_list, function(x){
+    extent <- sf::st_transform(extent, crs(x))
+    crop_rast <- terra::project(crop(x, extent), "EPSG:4326")
 
     crs(crop_rast) <- "EPSG:4326"
 

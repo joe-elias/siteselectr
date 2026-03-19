@@ -2,15 +2,24 @@
 % Please edit documentation in R/vis_rep.R
 \name{vis_rep}
 \alias{vis_rep}
-\title{This function takes two layers of raster data to compare to the site values.}
+\title{This function takes two layers of raster data to compare to the site values.
+A good indicator of representative site selection is broad coverage of the mean, min, and max raster data.}
 \usage{
 vis_rep(values, stack, layer1, layer2)
 }
-\description{
-A good indicator of representative site selection is broad coverage of the mean, min, and max raster data.
-}
-\details{
-Input the raster stack - output of rast_stck() - and site values - output of site_val().
+\arguments{
+\item{values}{output of the site_val() function. The values for each raster layer at each selected site.}
 
-'layer1' and 'layer2' refers to the y and x axis of the plot and the subset of layers used in the raster stack.
+\item{stack}{raster stack.}
+
+\item{layer1}{first layer to compare. Input a number corresponding to a subset of the raster stack.}
+
+\item{layer2}{second layer to compare.  Input a number corresponding to a subset of the raster stack.}
+}
+\value{
+scatter plot of raw raster data with the selected sites overlaid.
+}
+\description{
+This function takes two layers of raster data to compare to the site values.
+A good indicator of representative site selection is broad coverage of the mean, min, and max raster data.
 }

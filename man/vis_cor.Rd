@@ -2,13 +2,16 @@
 % Please edit documentation in R/vis_cor.R
 \name{vis_cor}
 \alias{vis_cor}
-\title{This function makes a simple correlation plot to visualize the collinearity env. variables.}
+\title{This function makes a simple correlation plot to visualize the collinearity between env. variables at selected sites.}
 \usage{
 vis_cor(values)
 }
-\description{
-Input is the site values produced from the site_val() function.
+\arguments{
+\item{values}{the site values produced from the site_val() function.}
 }
-\details{
-Output of cor_plot() is a matrix of correlation values for the raster data and a heat map visualizing environmental collinearity between site values.
+\value{
+a matrix of correlation values for the raster data and a heat map visualizing environmental collinearity between site values.
+}
+\description{
+This function makes a simple correlation plot to visualize the collinearity between env. variables at selected sites.
 }

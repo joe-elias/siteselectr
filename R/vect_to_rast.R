@@ -1,8 +1,11 @@
-#' This function takes vectorized spatial data (e.g., points and lines).
+#' This function takes vectorized spatial data (e.g., points and lines) and converts it to a raster image.
 #'
-#' The vector is cropped to a desired extent - either from the sample_ext() function or an existing polygon.
+#' @param vect the vector (line or point)
+#' @param extent either from the sample_ext() function or an existing polygon. Crops the vect parameter.
+#' @param res the desired resolution that the vector is rasterized.
 #'
-#' The vector is projected to
+#' @return a 'distance to vector" raster where each raster cell is the distance from the nearest line or point.
+#' @export
 
 
 

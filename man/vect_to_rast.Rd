@@ -2,13 +2,20 @@
 % Please edit documentation in R/vect_to_rast.R
 \name{vect_to_rast}
 \alias{vect_to_rast}
-\title{This function takes vectorized spatial data (e.g., points and lines).}
+\title{This function takes vectorized spatial data (e.g., points and lines) and converts it to a raster image.}
 \usage{
 vect_to_rast(vect, extent, res)
 }
-\description{
-The vector is cropped to a desired extent - either from the sample_ext() function or an existing polygon.
+\arguments{
+\item{vect}{the vector (line or point)}
+
+\item{extent}{either from the sample_ext() function or an existing polygon. Crops the vect parameter.}
+
+\item{res}{the desired resolution that the vector is rasterized.}
 }
-\details{
-The vector is projected to
+\value{
+a 'distance to vector" raster where each raster cell is the distance from the nearest line or point.
+}
+\description{
+This function takes vectorized spatial data (e.g., points and lines) and converts it to a raster image.
 }

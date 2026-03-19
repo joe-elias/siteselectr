@@ -6,11 +6,14 @@
 \usage{
 comparison(data, cells)
 }
+\arguments{
+\item{data}{data matrix of combined raster layers.}
+
+\item{cells}{refers to the cells already chosen.}
+}
+\value{
+a comparison matrix for the site_select() function. A matrix of data param with selected cells excluded.
+}
 \description{
 Produces a matrix of the original cell values except those chosen already for sampling sites.
-}
-\details{
-'df' refers to the raw data matrix of combined raster layers.
-
-'cells' refers to the cells already chosen.
 }

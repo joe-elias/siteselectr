@@ -2,20 +2,21 @@
 % Please edit documentation in R/site_select_wt.R
 \name{site_select_wt}
 \alias{site_select_wt}
-\title{Choose a set of sites from the new distance matrix.
-see comparison(), baseline(), & new_distance() functions.}
+\title{This function chooses a set of sites from the new distance matrix.}
 \usage{
 site_select_wt(long, lat, num, stack, weighted_layer, magnitude)
 }
-\description{
-'num' refers the number of rounds of site selection added to existing cells/sites.
+\arguments{
+\item{num}{the number of rounds of site selection added to existing cells/sites.}
+
+\item{stack}{refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.}
+
+\item{weighted_layer}{is the layer number in the raster stack to be weighted. This can be multiple numbers in c().}
+
+\item{magnitude}{if magnitude = NULL, default is 0.1 weight.}
+
+\item{cells}{the starting location and cell with the highest dissimilarity, or any legacy sites that were converted to cells that correspond to the}
 }
-\details{
-'cells' refers to the starting location and cell with the highest dissimilarity
-
-'stack' refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.
-
-'weighted layer' is the layer number in the raster stack to be weighted. This can be multiple numbers in c().
-
-if magnitude = NULL, default is 0.1 weight.
+\description{
+This function chooses a set of sites from the new distance matrix.
 }

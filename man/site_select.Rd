@@ -2,16 +2,24 @@
 % Please edit documentation in R/site_select.R
 \name{site_select}
 \alias{site_select}
-\title{Choose a set of sites from the new distance matrix.
-see comparison(), baseline(), & new_distance() functions.}
+\title{This function creates a network of field sites based on multivariate GIS data and a starting
+location.}
 \usage{
 site_select(long, lat, num, stack)
 }
-\description{
-'num' refers the number of rounds of site selection added to existing cells/sites.
-}
-\details{
-'cells' refers to the starting location and cell with the highest dissimilarity
+\arguments{
+\item{long}{longitude value for the first site.}
 
-'stack' refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.
+\item{lat}{latitude value for the first site.}
+
+\item{num}{number of sites to create the network.}
+
+\item{stack}{raster stack of raster layers. Product of the rast_stack function.}
+}
+\value{
+list of selected cells.
+}
+\description{
+This function creates a network of field sites based on multivariate GIS data and a starting
+location.
 }

@@ -2,9 +2,12 @@
 #'
 #' Produces a matrix of the original cell values except those chosen already for sampling sites.
 #'
-#' 'df' refers to the raw data matrix of combined raster layers.
+#' @param data data matrix of combined raster layers.
 #'
-#' 'cells' refers to the cells already chosen.
+#' @param cells refers to the cells already chosen.
+#'
+#' @return a comparison matrix for the site_select() function. A matrix of data param with selected cells excluded.
+#' @export
 
 comparison<-function(data, cells){
   comp<-data[-c(cells), ]

@@ -2,17 +2,18 @@
 % Please edit documentation in R/rast_distance.R
 \name{rast_distance}
 \alias{rast_distance}
-\title{The rast_distance() function measures the initial dissimilarity present in raster data without considering any chosen sampling sites.}
+\title{This function measures the initial dissimilarity present in raster data without considering any chosen sampling sites. Used in the site_select() function.}
 \usage{
 rast_distance(data)
 }
-\description{
-This function uses the Mahalanobis distance calculation to measure multivariate dissimilarity.
+\arguments{
+\item{data}{the product of the rast_matrix() function - the matrix of numeric values extracted from the stack of raster images.
+
+The covariance matrix included in the distance calculation uses an added diagonal matrix of 0.01 to avoid singularity issues.}
 }
-\details{
-'data' refers to the product of the rast_matrix() function - the matrix of numeric values extracted from the stack of raster images.
-
-The covariance matrix included in the distance calculation uses an added diagonal matrix of 0.01 to avoid singularity issues.
-
-The product from the first_distance() function should be applied to the __ funciton.
+\value{
+a MD distance matrix measuring dissimilarity of a raster stack.
+}
+\description{
+This function uses the Mahalanobis distance (MD) calculation to measure multivariate dissimilarity.
 }

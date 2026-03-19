@@ -1,12 +1,13 @@
-#' The rast_distance() function measures the initial dissimilarity present in raster data without considering any chosen sampling sites.
+#' This function measures the initial dissimilarity present in raster data without considering any chosen sampling sites. Used in the site_select() function.
 #'
-#' This function uses the Mahalanobis distance calculation to measure multivariate dissimilarity.
+#' This function uses the Mahalanobis distance (MD) calculation to measure multivariate dissimilarity.
 #'
-#' 'data' refers to the product of the rast_matrix() function - the matrix of numeric values extracted from the stack of raster images.
+#' @param data the product of the rast_matrix() function - the matrix of numeric values extracted from the stack of raster images.
 #'
 #' The covariance matrix included in the distance calculation uses an added diagonal matrix of 0.01 to avoid singularity issues.
 #'
-#' The product from the first_distance() function should be applied to the __ funciton.
+#' @return a MD distance matrix measuring dissimilarity of a raster stack.
+#' @export
 
 rast_distance<-function(data){
   cov_matrix <- cov(data, use="pairwise.complete.obs") +

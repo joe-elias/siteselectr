@@ -2,9 +2,22 @@
 % Please edit documentation in R/wt_distance.R
 \name{wt_distance}
 \alias{wt_distance}
-\title{modified from the wmahalanobis function from the WMDB package}
+\title{This function is modified from the wmahalanobis function from the WMDB package where this approach was originally developed.}
 \usage{
 wt_distance(data, center, cov, weight)
+}
+\arguments{
+\item{data}{raster stack data.}
+
+\item{center}{center mean.}
+
+\item{cov}{covariance matrix.}
+
+\item{weight}{weighted diagonal matrix.}
+}
+\value{
+a matrix of dissimilarity values.
+nested in the rast_distance_wt() function
 }
 \description{
 Wu, B., & Csárdi, G. (2010). WMDB: Discriminant Analysis Methods by Weight Mahalanobis Distance and Bayes* (Version 1.0) R package. CRAN. https://CRAN.R-project.org/package=WMDB

@@ -9,10 +9,15 @@ the extent crops new raster of annual averages to the desired sampling extent.}
 \usage{
 clim_load(nc, extent)
 }
+\arguments{
+\item{nc}{NetCDF file}
+
+\item{extent}{sampling extent to crop the raster.}
+}
+\value{
+a single cropped object of mean annual climate that can be saved as a TIFF file for further geospatial analysis.
+}
 \description{
 only works with the climetric package:
 devtools::install_github("elizagrames/climetric")
-}
-\details{
-returns a single cropped object of mean annual climate that can be saved as a TIFF file for further geospatial analysis.
 }

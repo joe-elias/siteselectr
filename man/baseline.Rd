@@ -6,11 +6,14 @@
 \usage{
 baseline(data, cells)
 }
-\description{
-Produces a matrix of the original cell values.
-}
-\details{
-df' refers to the raw data matrix of combined raster layers.
+\arguments{
+\item{data}{raw data matrix of combined raster layers.}
 
-'cells' refers to the cells already chosen.
+\item{cells}{refers to the cells already chosen.}
+}
+\value{
+baseline matrix of the original raster stack data.
+}
+\description{
+Create a baseline matrix to use in the site select function.
 }

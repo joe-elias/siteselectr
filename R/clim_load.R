@@ -6,7 +6,10 @@
 #' only works with the climetric package:
 #' devtools::install_github("elizagrames/climetric")
 #'
-#' returns a single cropped object of mean annual climate that can be saved as a TIFF file for further geospatial analysis.
+#' @param nc NetCDF file
+#' @param extent sampling extent to crop the raster.
+#' @return a single cropped object of mean annual climate that can be saved as a TIFF file for further geospatial analysis.
+#' @export
 
 clim_load<-function(nc, extent){
 x<-climetric::brick_nc(nc)

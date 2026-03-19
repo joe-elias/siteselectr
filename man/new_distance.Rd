@@ -2,15 +2,18 @@
 % Please edit documentation in R/new_distance.R
 \name{new_distance}
 \alias{new_distance}
-\title{Create a new matrix using the baseline (with chosen cells) and comparison (without chosen cells) matrices.}
+\title{This function creates a new matrix using the baseline (with selected cells) and comparison (without selected cells) matrices.}
 \usage{
 new_distance(data, cells)
 }
-\description{
-calculates Mahalanobis distance between a comparison and baseline set of cells.
-}
-\details{
-'data' refers to the raw data matrix of combined raster layers.
+\arguments{
+\item{data}{the raw data matrix of combined raster layers.}
 
-'cells' refers to the cells already chosen
+\item{cells}{refers to the cells already selected, or legacy sites that might exist and converted to cells that correspond to the raster stack.}
+}
+\value{
+a distance matrix that measures the dissimilarity between the original distance matrix - see rast_distance() function - and the original distance matrix minus already selected cells.
+}
+\description{
+This function creates a new matrix using the baseline (with selected cells) and comparison (without selected cells) matrices.
 }

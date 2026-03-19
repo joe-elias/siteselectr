@@ -6,6 +6,12 @@
 \usage{
 cell_combine(...)
 }
+\arguments{
+\item{cells}{any number of cells as values.}
+}
+\value{
+description input any number of cell objects to combine into a list.
+}
 \description{
-input any number of cell objects to combine into a list.
+Combine individual cells into a list to use in the site_select() function.
 }

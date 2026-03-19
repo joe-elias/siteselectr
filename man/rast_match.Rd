@@ -2,14 +2,18 @@
 % Please edit documentation in R/rast_match.R
 \name{rast_match}
 \alias{rast_match}
-\title{Align raster data to the same extent and resolution.}
+\title{Resample raster data to the same extent and resolution.}
 \usage{
-rast_match(raster_list, reference_layer, extent)
+rast_match(rast_list, reference_layer, extent)
+}
+\arguments{
+\item{rast_list}{List of rasters from the rast_collect function.}
+
+\item{reference_layer}{A target layer for resampling. Written as a subset of
+the object.}
+
+\item{extent}{The product of sample_ext - a vectorized polygon to crop the rasters.}
 }
 \description{
-'reference_layer' refers to the raster that everything will be projected.
-'extent' refers to the spatial boundary that the rasters will be cropped. This is the output of sample_ext().
-}
-\details{
-Rasters need to be aligned and projected to the same resolution and CRS before condensing into a raster stack and calculating a distance matrix.
+Resample raster data to the same extent and resolution.
 }

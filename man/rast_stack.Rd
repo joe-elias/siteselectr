@@ -2,10 +2,15 @@
 % Please edit documentation in R/rast_stack.R
 \name{rast_stack}
 \alias{rast_stack}
-\title{This function converts the resampled raster list into a geospatial object.}
+\title{Converts the resampled raster list from the rast_match function into a single geospatial object.}
 \usage{
 rast_stack(resampled, extent)
 }
+\arguments{
+\item{resampled}{The resampled rasters from the rast_match function.}
+
+\item{extent}{The vectorized polygon from the sample_ext function to crop the raster stack. description.}
+}
 \description{
-Input the product of the raster_match() function.
+Converts the resampled raster list from the rast_match function into a single geospatial object.
 }

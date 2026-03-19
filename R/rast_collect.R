@@ -1,6 +1,9 @@
-#' Used to collect a set of rasters into a list.
+#' This function collects a set of rasters into a list.
 #'
-#' Input any number of raster objects and combine them using list().
+#' @param ... any number of raster images.
+#' @return a list of rasters.
+#'
+#' @export
 
 rast_collect<-function(...){
   r_list<-list(...)

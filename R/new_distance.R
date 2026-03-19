@@ -1,11 +1,10 @@
-#' Create a new matrix using the baseline (with chosen cells) and comparison (without chosen cells) matrices.
+#' This function creates a new matrix using the baseline (with selected cells) and comparison (without selected cells) matrices.
 #'
-#' calculates Mahalanobis distance between a comparison and baseline set of cells.
+#' @param data the raw data matrix of combined raster layers.
 #'
-#' 'data' refers to the raw data matrix of combined raster layers.
-#'
-#' 'cells' refers to the cells already chosen
-#'
+#' @param cells refers to the cells already selected, or legacy sites that might exist and converted to cells that correspond to the raster stack.
+#' @return a distance matrix that measures the dissimilarity between the original distance matrix - see rast_distance() function - and the original distance matrix minus already selected cells.
+#' @export
 
 new_distance<-function(data, cells){
   baseline<-baseline(data, cells)

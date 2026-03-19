@@ -2,10 +2,16 @@
 % Please edit documentation in R/rast_collect.R
 \name{rast_collect}
 \alias{rast_collect}
-\title{Used to collect a set of rasters into a list.}
+\title{This function collects a set of rasters into a list.}
 \usage{
 rast_collect(...)
 }
+\arguments{
+\item{...}{any number of raster images.}
+}
+\value{
+a list of rasters.
+}
 \description{
-Input any number of raster objects and combine them using list().
+This function collects a set of rasters into a list.
 }

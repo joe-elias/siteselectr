@@ -2,15 +2,16 @@
 % Please edit documentation in R/max_cell.R
 \name{max_cell}
 \alias{max_cell}
-\title{Choose the maximum different site to the starting location.}
+\title{This function chooses the maximum different site to the starting location based on the MD.}
 \usage{
 max_cell(distance_matrix)
 }
-\description{
-Using an x, y coordinate - chooses the cell from the original distance matrix with the highest dissimilarity to the starting location.
+\arguments{
+\item{distance_matrix}{calculated from rast_distance() function.}
 }
-\details{
-'matrix' refers to the output from the rast_mat() function - the raster stack resampled and in matrix-value form.
-
-See: first_distance() function for original distance matrix.
+\value{
+a cell in the distance matrix with maximum dissimilarity (i.e., highest value).
+}
+\description{
+This function chooses the maximum different site to the starting location based on the MD.
 }

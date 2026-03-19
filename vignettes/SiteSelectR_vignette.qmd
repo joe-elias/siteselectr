@@ -1,26 +1,38 @@
 ---
-title: "SiteSelectR Vignette"
+title: "siteselectr Vignette"
 format: html
 editor: visual
 ---
 
 ## Project Overview
 
-Monitoring networks are crucial for understanding how ecosystems respond to environmental change. Apparent trends in biodiversity can be driven by site selection bias towards easily accessed sites, not necessarily the most representative of the landscape – future inference could misrepresent trends due to the original network design. SiteSelectR is an r package aimed at creating a framework for long-term ecological monitoring that decreases spatial and environmental bias and increases representation of the focal variables used to choose sites.
+Monitoring networks are crucial for understanding how ecosystems respond to environmental change. Apparent trends can be driven by site selection bias towards easily accessed or interesting sites, not necessarily the most representative of the landscape, thereby encouraging misrepresented trends in temporal and spatial data. **siteselectr** is an r package made for simple site selection that optimizes envrionmental variation under common spatial and environmental constraints encountered when designing a monitoring network.
 
-The general outline of SiteSelectR consists of five steps: (i) define the region in which to select sites as a spatial polygon; (ii) characterize the environmental conditions (e.g., elevation, land use, road density) within the region using geospatial data; (iii) calculate the dissimilarity in the environmental conditions among all sites using multivariate Mahalanobis distance – the region can be filtered to only accessible locations (e.g., public land); (iv) select a starting location (arbitrary) and select the most dissimilar site to the starting location; (v) recalculate the dissimilarity among all non-selected cells to the suite of conditions represented in the network. Iterate until the number of desired sampling sites.
+[The general outline of **siteselectr**:]{.underline}
+
+1.  Define the region in which to select sites.
+
+2.  Characterize the environmental conditions (e.g., elevation, land use, road density) within the region using geospatial data.
+
+3.  Calculate the dissimilarity in the environmental conditions among all sites using a modified Mahalanobis distance (MD) algorithm.
+
+4.  Select a starting location (arbitrary) and select the most dissimilar site to the starting location.
+
+5.  Recalculate the dissimilarity among all non-selected cells to the suite of conditions represented in the network. Iterate until the number of desired sampling sites.
 
 ## General Approach
 
 ```{r}
-library(SiteSelectR)
+library(siteselectr)
+library(terra)
+library(sf)
 ```
 
-The **SiteSelectR** library works with the terra (Hijmans et al. 2025) and sf (Pebesma et al. 2025) packages. Both are used in **SiteSelectR** to handle raster data (terra) and vectorized shapefiles (sf).
+The **siteselectr** library works with the terra (Hijmans et al. 2025) and sf (Pebesma et al. 2025) packages. Both are used in **siteselectr** to handle raster data (terra) and vectorized shapefiles (sf).
 
-In this document we demonstrate the use of `site_select`, which is the main function of **SiteSelectR**. Then, we detail the different functions wrapped inside `site_select` that maximizes representativeness of the field sites it chooses. For the purpose of this project we define representativeness as how much of the distribution of raster data is represented by the resulting cell values.
+In this document we demonstrate the use of `site_select`, which is the main function of **siteselectr**. Then, we detail the different functions wrapped inside `site_select` that maximizes representativeness of the field sites it chooses. For the purpose of this project we define representativeness as how much of the distribution of raster data is represented by the resulting cell values. Particularly the maximum and minimum extremes that hold valuable information but are often missed by site networks.
 
-Before running `site_select` we'll provide functions to prepare raster data and create a sampling extent to choose sites - two necessary steps for running `site_select`. First, we'll use terra to randomly generate 5 rasters from a normal distribution to use as an example. Each raster is generated at a different spatial extent to demonstrate how **SiteSelectR** handles projections and data organization.
+Before running `site_select` we'll provide functions to prepare raster data and create a sampling extent to choose sites - two necessary steps for running `site_select`. First, we'll randomly generate 5 rasters from a normal distribution to use as an example. Each raster is generated at a different spatial extent to demonstrate how **siteselectr** handles projections and data organization.
 
 ```{r}
 var1<-terra::rast(matrix(rnorm(900, mean=0, sd=1), 
@@ -35,12 +47,12 @@ var5<-terra::rast(matrix(rnorm(1500, mean=0, sd=1), nrow=750, ncol=750),
                   crs="EPSG:4326")
 ```
 
-We'll create our sampling extent, which is the geospatial boundary that we'll contain site selection. The sampling extent can be a park or other boundary defined by a vectorized shapefile. If this is the case load in the shapefile using `sf::st_read` and project it to your focal coordinate reference system (CRS) using `sf::st_transform` and `sf::st_crs`. However, if this type of boundary is unnecessary or unattainable for the user, **SiteSelectR** offers a function, `sample_ext` which calculates a circle surrounding a central starting location for users to build their own focal area. The starting location might be chosen arbitrarily (i.e., random spatial sampling), or it can be a location that's easily accessible.
+We'll create our sampling extent, which is the geospatial boundary that we'll constrain site selection. The sampling extent can be a park or other boundary defined by a vectorized shapefile. If this is the case load in the shapefile using `sf::st_read` and project it to your focal coordinate reference system (CRS) using `sf::st_transform` and `sf::st_crs`. However, if this type of boundary is unnecessary or unattainable for the user, **siteselectr** offers a function, `sample_ext` which calculates a circle surrounding a central starting location for users to build their own focal area. The starting location might be chosen arbitrarily (i.e., random spatial sampling), or it can be a location that's easily accessible.
 
 The sample_ext() function writes a vectorized point using `sf::st_as_sf` from latitude/longitude coordinates, then projects the point to the desired CRS using an EPSG code. We use the World Geodetic System (WGS) 84 CRS since it's commonly used for GIS analysis and visualization. The sample extent uses a radius value (in meters) supplied by the user in sf::st_buffer and uses the Mercator CRS projection which is conformable to a precise geospatial cylindrical calculation surrounding a single central point supplied by the user. Once calculated, the function converts the sampling extent to the supplied CRS. In this example we use 750,000 meters (m) and the coordinates 10.0, 12.0.
 
 ```{r}
-sampling_extent<-sample_ext(x=10.0, y=12.0, 750000, crs=4326)
+sampling_extent<-siteselectr::sample_ext(x=10.0, y=12.0, 750000, crs=4326)
 head(sampling_extent)
 
 ```
@@ -48,7 +60,7 @@ head(sampling_extent)
 Let's visualize the sampling extent on one of the simulated rasters. We arbitrarily chose the first raster to visualize our sampling extent.
 
 ```{r}
-plot(var1) ; lines(sampling_extent, col='red')
+plot(var1) ; lines(sampling_extent, col='red', lwd=3)
 ```
 
 `site_select` uses `terra::mask` in its function to ensure any cells outside the sampling extent are excluded - we demonstrate what this looks like here:
@@ -61,45 +73,47 @@ plot(var1_mask)
 Use `rast_collect` to take a set of rasters and place them in a usable list.
 
 ```{r}
-r_list<-rast_collect(var1, var2, var3, var4)
+r_list<-siteselectr::rast_collect(var1, var2, var3, var4)
 ```
 
-Then, use `rast_match` to resample the raster list to the same extent, resolution, and CRS. `rast_match` uses `terra::project` and `sf::st_transform` to align the sampling extent and the raster data. This step is necessary to calculate a distance matrix that's spatially the same as our raster data. The raster list is projected to match a reference raster - we've arbitrarily chosen the fourth raster layer to be our reference. The extent should be the sampling extent either calculated using `sample_ext` or an existing vectorized polygon.
+Use `rast_match` to resample the raster list to the same extent, resolution, and CRS. `rast_match` uses `terra::project` and `sf::st_transform` to align the sampling extent and the raster data. This step is necessary to calculate a distance matrix that's spatially the same as our raster data. The raster list is projected to match a reference raster - we've arbitrarily chosen the fourth raster layer to be our reference. The extent should be the sampling extent either calculated using `sample_ext` or an existing vectorized polygon.
 
 ```{r}
-r_resampled<-rast_match(raster_list = r_list, 
+r_resampled<-rast_match(rast_list = r_list, 
                         reference_layer = r_list[[4]], 
                         extent = sampling_extent)
 str(r_resampled)
 ```
 
-As a final data preparation step, **SiteSelectR** uses `rast_stack` to convert the resampled list of rasters into a single georeferenced object, a raster stack, then realigns the raster object's extent and masks the stack to our sampling extent. The extent and resolution of the rasters are harmonized often in SiteSelectR to ensure that the Mahalanobis calculation \`matches their geospatial information exactly. If the rasters are not projected to the exact same extent and resolution for each data preparation step, the distance values might be spatially skewed and the resulting sites of defunct.
+As a final data preparation step, **siteselectr** uses `rast_stack` to convert the resampled list of rasters into a single georeferenced object, a raster stack, then realigns the raster object's extent and masks the stack to our sampling extent. The extent and resolution of the rasters are harmonized often in siteselectr to ensure that the Mahalanobis calculation matches their geospatial information exactly. If the rasters are not projected to the exact same extent and resolution for each data preparation step, the distance values might be spatially skewed and the resulting sites of defunct.
 
 ```{r}
-r_stack<-rast_stack(r_resampled, sampling_extent)
+r_stack<-siteselectr::rast_stack(r_resampled, sampling_extent)
 names(r_stack)<-c("Raster 1", "Raster 2", "Raster 3", "Raster4")
 
 plot(r_stack)
 
 ```
 
-We now have a sampling extent and a stack of rasters - the neccessary components needed to run `site_select` which is the main function of **SiteSelectR**.
+We now have a sampling extent and a stack of rasters - the necessary components needed to run `site_select` which is the main function of **siteselectr**.
 
 `site_select` uses a *latitude* and *longitude* as the starting location. This can be the location used in `sample_ext` or something else. *num* refers to number of cells to select. The desired number of cells accounts for the starting location. So if we set *num* to 15, it will return 15 sites and one of those will be our starting latitude and longitude that's entered into the `site_select` function.
 
 ```{r}
-sites<-site_select(long=12, lat=10, num=15, stack=r_stack)
+sites<-siteselectr::site_select(long=12, lat=10, num=15, stack=r_stack)
 print(sites)
 ```
 
-We can visualize our sites using the `plot_sites` function which takes the cells we generated and uses `terra::XYFromcell` to transform them into coordinates and plot the coordinates on one of the raster layers - `plot_sites` returns a list of site coordinates.
+We can visualize our sites by converting the selected cells into geographic coordinates.
 
 ```{r}
-sites_coord<-plot_sites(cells=sites, stack=r_stack)
+site_xy<-terra::xyFromCell(r_stack[[1]], sites)
+plot(r_stack[[1]])
+points(site_xy, col='red', pch=19)
 ```
 
 ```{r}
-print(sites_coord)
+print(site_xy)
 ```
 
 Let's break down `site_select`. First, `site_select` converts the raster stack into a matrix. Then, the first layer of the raster stack is copied and its values removed to be used as a geographic reference to choose cells and convert them to coordinates.
@@ -110,13 +124,13 @@ ref_layer<-r_stack[[1]]
 values(ref_layer)<-NA
 ```
 
-We can build the distance matrix using Mahalanobis distance calculation on the raster stack matrix. Mahalanobis is used because it's well equipped for multivariate environmental data that exhibits correlated features. The Mahalanobis distance is calculated as:
+We can build the distance matrix using Mahalanobis distance (MD) calculation on the raster stack matrix. Mahalanobis is equipped for multivariate environmental data that exhibits correlated features and can return a matrix that corresponds to geospatial points. The Mahalanobis distance is calculated as:
 
 `d^2 = (x_{ijk} - μ)' Σ⁻¹(x_{ijk} - μ)`
 
 where k is vector of environmental values at a given latitude(i) and longitude(j), μ is the mean vector across the raster layers – transposed to align with the inverse covariance matrix; Σ⁻¹ is the inverse of the covariance matrix, which adjusts for correlations among focal variables. This results in a scalar metric at each cell that reflects multivariate dissimilarity across all raster layers at once (Etherington, 2021; De Maesschalck, Jouan-Rimbaud, and Massart, 2000).
 
-We created the covariance matrix using the `cov` function, allowing for missing values by setting 'use' to `pairwise.complete.obs` – this is essential since NA values contribute to the spatial integrity of the raster data and cannot be removed. We added a diagonal of small values (0.01) to regularize the matrix which helps limit singularity issues between colinear data. We calculated the center mean for the Mahalanobis calculation using `colMeans` on the raster data, ignoring NA values. `site_select` uses the `mahalanobis` function - its parameters being the matrix of the raster stack data, center mean, and covariance matrix to produce the initial distance matrix.
+We created the covariance matrix using the `cov` function, allowing for missing values by setting 'use' to `pairwise.complete.obs` – [this is essential since NA values contribute to the spatial integrity of the raster data and cannot be removed]{.underline}. We added a diagonal of small values (0.01) to regularize the matrix which helps limit singularity issues between colinear data. We calculated the center mean for the Mahalanobis calculation using `colMeans` on the raster data, ignoring NA values. `site_select` uses the `mahalanobis` function - its parameters being the matrix of the raster stack data, center mean, and covariance matrix to produce the initial distance matrix.
 
 We wrap this process in the function, `rast_distance`, which measures the dissimilarity between one cell to another relative to the mean distribution of the raster stack.
 
@@ -128,11 +142,11 @@ summary(distance_matrix)
 We can use `heat_distance` to visualize the dissimilarity in our matrix. The highest dissimilar area will be chosen first. `heat_distance` maps an empty raster of NA values, and then inserts the distance matrix values into the empty cells.
 
 ```{r}
-heat_map<-heat_distance(stack=distance_matrix)
+heat_map<-heat_distance(raster_stack=r_stack, dist_mat=distance_matrix)
 plot(heat_map)
 ```
 
-We now have a matrix of distance values, where each cell corresponds to a geographic location and its environmental variability. Next, we'll use `max_cell` to select the most dissimilar cell in the distance matrix.
+We now have a matrix of distance values, where each cell corresponds to a geographic location and its environmental variation. Next, we'll use `max_cell` to select the most dissimilar cell in the distance matrix.
 
 ```{r}
 max<-max_cell(distance_matrix = distance_matrix)
@@ -166,6 +180,7 @@ summary(new_matrix)
 Now choose another site with `max_cell`. Before using `max_cell` we create an empty raster that's filled with our new matrix values. This avoids any spatial irregularities. We combine this with our existing list of cells and plot.
 
 ```{r}
+ref<-r_stack[[1]]
 tmp.r<-as.matrix(ref)
 tmp.r[!is.na(tmp.r)] <- NA
 tmp.r[-c(cells)] <- new_matrix
@@ -196,7 +211,9 @@ print(cells)
 ```
 
 ```{r}
-final_sites<-plot_sites(cells, r_stack)
+final_sites<-terra::xyFromCell(r_stack[[1]], cells)
+plot(r_stack[[1]])
+points(final_sites, col='red', pch=19)
 ```
 
 We can use `site_val` to pull the cell values from the original raster data for each field site. `site_val` uses `terra::extract`, then converts the product to a matrix which can be used to assess how well `site_select` chose sites that represent the environmental variability of our data.
@@ -214,16 +231,20 @@ cor_plot<-vis_cor(cell_values)
 
 Each cell is a site, and at each site the value is either colinear (red) or noncolinear (blue) between the corresponding variables. `vis_cor` returns a table of correlations as well. Using `vis_cor` might be favorable so users know which variables can and can't be statistically separated a priori.
 
-\(2\) `vis_rep` takes the cell values from `site_val` and plots two raster layers to compare where in their distribution our site values lie. The goal of **SiteSelectR** is to represent environmental space evenly during site selection - especially covering the maximum and minimum values (i.e., avoiding mean-driven selection) so it's favorable to have sites that occupy the entirety of each layer. `vis_rep` uses the cell values, raster stack, and the numerical value for the position of each layer to compare. Here we compare how well cell values are distributed between layers 1 and 2.
+\(2\) `vis_rep` takes the cell values from `site_val` and plots two raster layers to compare where in their distribution our site values lie. The goal of **siteselectr** is to represent environmental space evenly during site selection - especially covering the maximum and minimum values (i.e., avoiding mean-driven selection) so it's favorable to have sites that occupy the entirety of each layer. `vis_rep` uses the cell values, raster stack, and the numerical value for the position of each layer to compare. Here we compare how well cell values are distributed between layers 1 and 2.
 
 ```{r}
-vis_rep(values=cell_values, stack=r_stack, layer1 = 1, 
-        layer2 = 2)
+# vis_rep(values=cell_values, stack=r_stack, layer1 = 1, layer2 = 2)
+
+plot(r_stack[[1]], r_stack[[2]], col="lightgray")
+points(cell_values[, 1], cell_values[, 2], col="red", pch=19, cex=1.0)
 ```
 
-## Weighted Approach 
+## Weighted Approach
 
-The Mahalanobis distance equation is designed to treat all parameters equally. However, a common practice in ecological monitoring is to focus on one or a few variables while still accounting for other multivariate influence. **SiteSelectR** offers a modified version of our general approach, `site_select_wt`, which weights specific raster layers entered into the Mahalanobis calculation. The Mahalanobis calculation used in `site_select_wt` is modified from the `wmahalanobis` function in the **WMDB** package (Wu, 2012).
+The Mahalanobis distance equation is designed to treat all parameters equally. However, a common practice in ecological monitoring is to focus on one or a few variables while still accounting for other multivariate influence. **siteselectr** offers a modified version of our general approach, `site_select_wt`, which weights specific raster layers entered into the Mahalanobis calculation. The Mahalanobis calculation used in `site_select_wt` is modified for our use based the `wmahalanobis` function in the **WMDB** package (Wu, 2012).
+
+Like `site_select`, the `site_select_wt` function requires a latitude and longitude to create a sampling extent, the number of desired sites, and a raster stack - the raster stack is created using the same functions we detail in our general approach. In addition, `site_select_wt` requires the layers in the raster stack to weight. For instance, entering `weighted_layer = c(1,3)` like we do below, will put a weight on the first and third layer of the raster stack. *magnitude* refers to the magnitude of weight to place on the focal layer(s). All layers are weighted by 0.001 by default - we typically start weighting layers by 0.1, with \>0.5 being considered a large magnitude to apply. In our example below, we weight the first and third layer by 0.5
 
 ```{r}
 weighted_cells<-site_select_wt(long=12, lat=10, num=15, stack=r_stack, 
@@ -231,15 +252,19 @@ weighted_cells<-site_select_wt(long=12, lat=10, num=15, stack=r_stack,
 print(weighted_cells)
 ```
 
+`site_select_wt` functions similar to `site_select`: cells are iteratively selected based on their maximum dissimilarity from the current set of selected and unselected cells. The key difference is that `site_select_wt` allows specific raster layers to be up‑weighted during the Mahalanobis distance calculation.
+
+Weights are applied by constructing a diagonal matrix whose entries correspond to the user‑specified magnitude for selected variables. These weights scale the variables prior to the covariance inversion, increasing the influence of the chosen layers on the resulting distance metric. As a result, cells that are extreme in the weighted variables contribute more strongly to the Mahalanobis distance.
+
+During site selection, the algorithm still identifies the most dissimilar (i.e., environmentally extreme) cells in the weighted Mahalanobis space. These typically correspond to areas with high variation in the focal variable(s) (e.g., elevation, precipitation). However, because the Mahalanobis distance inherently rescales all variables and accounts for covariance structure, the weighting does not dominate the selection entirely. Instead, it biases the selection toward the focal variable(s) while still maintaining a multivariate balance across all layers.
+
 ```{r}
-weighted_sites<-plot_sites(weighted_cells, r_stack)
+weighted_xy <- terra::xyFromCell(r_stack[[1]], weighted_cells)
+
+plot(r_stack[[3]]) ; points(weighted_xy, col='red', pch=19)
 ```
 
-site_select_wt works the same as site_select - cells are chosen based on their maximum dissimilarity from unselected cells. Our weighted approach applies a diagonal of weighted
-
 ```{r}
-wt_mat <- rast_distance_wt(stack=r_stack, weighted_layer=c(1,4), magnitude=0.7)
-summary(wt_mat)
 ```
 
-## Citations 
+## Citations

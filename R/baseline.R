@@ -1,10 +1,10 @@
 #' Create a baseline matrix to use in the site select function.
 #'
-#' Produces a matrix of the original cell values.
+#' @param data raw data matrix of combined raster layers.
 #'
-#' df' refers to the raw data matrix of combined raster layers.
-#'
-#' 'cells' refers to the cells already chosen.
+#' @param cells refers to the cells already chosen.
+#' @return baseline matrix of the original raster stack data.
+#' @export
 
 baseline<-function(data, cells){
   base<-data[c(cells), ]

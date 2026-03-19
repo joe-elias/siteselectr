@@ -2,15 +2,18 @@
 % Please edit documentation in R/site_val.R
 \name{site_val}
 \alias{site_val}
-\title{Creates a matrix with the values of the sites at each layer of raster data.}
+\title{This function creates a matrix with the values of the sites at each layer of raster data.}
 \usage{
 site_val(sites, stack)
 }
-\description{
-The matrix is the correct format to use in ggbiplot which is the suggested visual to view representativeness of sites relative to the raw raster data.
-}
-\details{
-Input is 'sites', the site coordinates from the plot_sites() function.
+\arguments{
+\item{sites}{the site coordinates from the plot_sites() function.}
 
-'Stack' refers to the output of rast_stack().
+\item{stack}{raster stack.}
+}
+\value{
+the values of each variable in the raster stack at each selected cell during site selection.
+}
+\description{
+This function creates a matrix with the values of the sites at each layer of raster data.
 }

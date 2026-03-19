@@ -4,15 +4,17 @@
 \alias{heat_distance}
 \title{This is an optional function to visualize the initial dissimilarity present in the first_distance() function.}
 \usage{
-heat_distance(stack)
+heat_distance(raster_stack, dist_mat)
+}
+\arguments{
+\item{raster_stack}{raster stack.}
+
+\item{dist_mat}{distance matrix.}
+}
+\value{
+a heat map of distance values visually projected onto the spatial extent of the supplied rasters.
 }
 \description{
 The function takes a reference_raster to fill with the values from the distance matrix.
-}
-\details{
-Input the assigned name to the raster stack - the output of rast_match() function.
-
 The function uses a random sublayer of the raster stack (e.g., r_stack[[]]) to ensure the distance matrix is projected to the correct resolution and extent.
-
-The output is a heat map of distance values visually projected onto the spatial extent of the supplied rasters.
 }

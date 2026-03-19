@@ -1,11 +1,15 @@
-#' Choose a set of sites from the new distance matrix.
-#' see comparison(), baseline(), & new_distance() functions.
+#' This function creates a network of field sites based on multivariate GIS data and a starting
+#' location.
 #'
-#' 'num' refers the number of rounds of site selection added to existing cells/sites.
+#' @param long longitude value for the first site.
+#' @param lat latitude value for the first site.
 #'
-#' 'cells' refers to the starting location and cell with the highest dissimilarity
+#' @param num  number of sites to create the network.
 #'
-#' 'stack' refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.
+#' @param stack raster stack of raster layers. Product of the rast_stack function.
+#'
+#' @return list of selected cells.
+#' @export
 
 site_select<-function(long, lat, num, stack){
 

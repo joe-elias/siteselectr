@@ -2,13 +2,24 @@
 % Please edit documentation in R/rast_distance_wt.R
 \name{rast_distance_wt}
 \alias{rast_distance_wt}
-\title{modified version of rast_distance() and the wmahalanobis function from the WMDB package (Wu, 2012).
-'weighted_layer' refers to the layer(s) in the raster stack to be weighted.
-use c() to combine multiple layers before using them in the 'weighted layer' parameter.}
+\title{This function is a modified version of rast_distance() and the wmahalanobis function from the WMDB package (Wu, 2012).}
 \usage{
 rast_distance_wt(stack, weighted_layer, magnitude)
 }
+\arguments{
+\item{stack}{raster stack.}
+
+\item{weighted_layer}{the layer(s) in the raster stack to be weighted - numbers corresponding to a subset of the raster stack.
+use c() to combine multiple layers before using them in the 'weighted layer' parameter.}
+
+\item{magnitude}{should be a weight value assigned to focal layers - relative to all other layers which are by default weighted at 0.001.
+A large weight value would be >0.5.}
+}
+\value{
+a measure of the initial dissimilarity present in raster data without considering any chosen sampling sites.
+Example:
+rast_distance_wt(stack=r_stack, weighted_layer=c(1, 3), magnitude=0.5)
+}
 \description{
-'magnitude' should be a weight value assigned to focal layers - relative to all other layers which are by default weighted at 0.001.
-A large weight value would be >0.5.
+This function is a modified version of rast_distance() and the wmahalanobis function from the WMDB package (Wu, 2012).
 }
