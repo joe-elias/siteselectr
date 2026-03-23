@@ -23,6 +23,7 @@ Monitoring networks are crucial for understanding how ecosystems respond to envi
 ## General Approach
 
 ```{r}
+# devtools::install()
 library(siteselectr)
 library(terra)
 library(sf)
@@ -97,7 +98,7 @@ plot(r_stack)
 
 We now have a sampling extent and a stack of rasters - the necessary components needed to run `site_select` which is the main function of **siteselectr**.
 
-`site_select` uses a *latitude* and *longitude* as the starting location. This can be the location used in `sample_ext` or something else. *num* refers to number of cells to select. The desired number of cells accounts for the starting location. So if we set *num* to 15, it will return 15 sites and one of those will be our starting latitude and longitude that's entered into the `site_select` function.
+`site_select` uses a *latitude* and *longitude* as the starting location. This can be the central location used in `sample_ext` or something else. *num* refers to number of cells to select. The desired number of cells accounts for the starting location. So if we set *num* to 15, it will return 15 sites and one of those will be our starting latitude and longitude that's entered into the `site_select` function.
 
 ```{r}
 sites<-siteselectr::site_select(long=12, lat=10, num=15, stack=r_stack)
@@ -170,7 +171,7 @@ plot(heat_map); points(cells_xy, col='red', pch=19)
 
 These 2 sites are the basis for automating the remaining code in the `site_select` function. The first Mahalanobis calculation represents the dissimilarity across the entire environmental gradient each cell in relation to every other cell of the raster stack. This is represented by the product of `max_cell`. Every following site selection must account for the environmental variation minus the cells that were already chosen. An approach that we include in the `new_distance` function wrapped inside `site_select`.
 
-`new_distance` uses the Mahalanobis equation - same as `rast_distance`. While `rast_distance` measures the variability in one dataset (our raster data), `new_distance` creates two datasets - a baseline group which is the original distance matrix produced from `rast_distance` and the comparison group, which is the baseline group with the values of selected cells replaced with NA values which preserves the spatial integrity of the matrix. Then, instead of calculating the dissimilarity between every cell to each other, `new_distance` measures the dissimilarity between every cell not selected yet (comparison group) to every possible cell (baseline group) simultaneously.
+`new_distance` uses the Mahalanobis equation - same as `rast_distance`. While `rast_distance` measures the variability in one dataset (our raster data), `new_distance` creates two datasets - a available group which is the original distance matrix produced from `rast_distance` and the comparison group, which is the available group with the values of selected cells replaced with NA values which preserves the spatial integrity of the matrix. Then, instead of calculating the dissimilarity between every cell to each other, `new_distance` measures the dissimilarity between every cell not selected yet (comparison group) to every possible cell (available group) simultaneously.
 
 ```{r}
 new_matrix<-new_distance(rast_data, cells)
@@ -247,8 +248,8 @@ The Mahalanobis distance equation is designed to treat all parameters equally. H
 Like `site_select`, the `site_select_wt` function requires a latitude and longitude to create a sampling extent, the number of desired sites, and a raster stack - the raster stack is created using the same functions we detail in our general approach. In addition, `site_select_wt` requires the layers in the raster stack to weight. For instance, entering `weighted_layer = c(1,3)` like we do below, will put a weight on the first and third layer of the raster stack. *magnitude* refers to the magnitude of weight to place on the focal layer(s). All layers are weighted by 0.001 by default - we typically start weighting layers by 0.1, with \>0.5 being considered a large magnitude to apply. In our example below, we weight the first and third layer by 0.5
 
 ```{r}
-weighted_cells<-site_select_wt(long=12, lat=10, num=15, stack=r_stack, 
-                               weighted_layer = c(1, 3), magnitude = 0.5)
+weighted_cells<-site_select_wt(long=10, lat=9.5, num=12, stack=r_stack, 
+                               weighted_layer = 1, magnitude = 0.8)
 print(weighted_cells)
 ```
 
@@ -261,7 +262,7 @@ During site selection, the algorithm still identifies the most dissimilar (i.e.,
 ```{r}
 weighted_xy <- terra::xyFromCell(r_stack[[1]], weighted_cells)
 
-plot(r_stack[[3]]) ; points(weighted_xy, col='red', pch=19)
+plot(r_stack[[4]]) ; points(weighted_xy, col='red', pch=19)
 ```
 
 ```{r}

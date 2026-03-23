@@ -7,6 +7,10 @@
 site_select_wt(long, lat, num, stack, weighted_layer, magnitude)
 }
 \arguments{
+\item{long}{the starting location.}
+
+\item{lat}{the starting location.}
+
 \item{num}{the number of rounds of site selection added to existing cells/sites.}
 
 \item{stack}{refers to the output from the rast_stack() function - the raster stack resampled to the same extent and resolution.}
@@ -14,8 +18,6 @@ site_select_wt(long, lat, num, stack, weighted_layer, magnitude)
 \item{weighted_layer}{is the layer number in the raster stack to be weighted. This can be multiple numbers in c().}
 
 \item{magnitude}{if magnitude = NULL, default is 0.1 weight.}
-
-\item{cells}{the starting location and cell with the highest dissimilarity, or any legacy sites that were converted to cells that correspond to the}
 }
 \description{
 This function chooses a set of sites from the new distance matrix.

@@ -1,4 +1,4 @@
-#' This function creates a new matrix using the baseline (with selected cells) and comparison (without selected cells) matrices.
+#' This function creates a new matrix using the available (with selected cells) and selected (without selected cells) matrices.
 #'
 #' @param data the raw data matrix of combined raster layers.
 #'
@@ -7,10 +7,10 @@
 #' @export
 
 new_distance<-function(data, cells){
-  baseline<-baseline(data, cells)
-  comparison<-comparison(data, cells)
+  available<-available(data, cells)
+  selected<-selected(data, cells)
 
-  reg.cov<-cov(baseline)+diag(0.01, nrow(cov(baseline)))
+  reg.cov<-cov(available)+diag(0.01, nrow(cov(available)))
 
-  new_matrix<-stats::mahalanobis(comparison, apply(baseline, 2, mean, na.rm=F), reg.cov)
+  new_matrix<-stats::mahalanobis(selected, apply(available, 2, mean, na.rm=F), reg.cov)
 }
