@@ -16,8 +16,7 @@
 #'
 #' @export
 
-
-log_to_prop <- function(rast, cls, extent, shell){
+class_prop <- function(rast, cls, extent, shell){
   terra::crop(rast, extent)
   obj<-rast %in% cls
   obj_proj<-project(obj, shell)
