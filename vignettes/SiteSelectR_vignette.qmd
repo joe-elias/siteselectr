@@ -40,8 +40,8 @@ var1<-terra::rast(matrix(rnorm(900, mean=0, sd=1),
                        nrow=30, ncol=30), crs="EPSG:4326")
 var2<-terra::rast(matrix(rnorm(625, mean=0, sd=1), 
                        nrow=25, ncol=25), crs="EPSG:4326")
-var3<-terra::rast(matrix(rnorm(400, mean=0, sd=1), 
-                       nrow=20, ncol=20), crs="EPSG:4326")
+var3<-terra::rast(matrix(rnorm(625, mean=0, sd=1), 
+                       nrow=25, ncol=25), crs="EPSG:4326")
 var4<-terra::rast(matrix(rnorm(1500, mean=0, sd=1), 
                          nrow=750, ncol=750), crs="EPSG:4326")
 var5<-terra::rast(matrix(rnorm(1500, mean=0, sd=1), nrow=750, ncol=750), 
@@ -74,7 +74,7 @@ plot(var1_mask)
 Use `rast_collect` to take a set of rasters and place them in a usable list.
 
 ```{r}
-r_list<-siteselectr::rast_collect(var1, var2, var3, var4)
+r_list<-siteselectr::rast_collect(var1, var2, var3, var4, var5)
 ```
 
 Use `rast_match` to resample the raster list to the same extent, resolution, and CRS. `rast_match` uses `terra::project` and `sf::st_transform` to align the sampling extent and the raster data. This step is necessary to calculate a distance matrix that's spatially the same as our raster data. The raster list is projected to match a reference raster - we've arbitrarily chosen the fourth raster layer to be our reference. The extent should be the sampling extent either calculated using `sample_ext` or an existing vectorized polygon.
@@ -90,7 +90,7 @@ As a final data preparation step, **siteselectr** uses `rast_stack` to convert t
 
 ```{r}
 r_stack<-siteselectr::rast_stack(r_resampled, sampling_extent)
-names(r_stack)<-c("Raster 1", "Raster 2", "Raster 3", "Raster4")
+names(r_stack)<-c("Raster 1", "Raster 2", "Raster 3", "Raster4", "Raster5")
 
 plot(r_stack)
 
@@ -265,7 +265,69 @@ weighted_xy <- terra::xyFromCell(r_stack[[1]], weighted_cells)
 plot(r_stack[[4]]) ; points(weighted_xy, col='red', pch=19)
 ```
 
+## Filter Approach
+
+**siteselectr** provides a function for selecting representative field sites under geographic constraints—a common limitation that researchers might face, such as choosing field sites within public or other accessible land in vectorized polygon format. Filtering can be done before or after calculating the multivariate dissimilarity among cells. The output between the two might be similar and in both, cells will be masked to the filter polygon. Users might favor filtering before the Mahalanobis distance calculation if they are interested in the dissimilarity among cells exclusively within the spatial constraint. Filtering after the distance calculation may be more appropriate if the intent is to understand measured outcomes across the entire region of interest. Sites might be similar between the two approaches.
+
+Let's try out `site_select_fil`, which uses the same framework as `site_select` but either masks the cells before the distance calculation, or directly masks the distance matrix to the filter polygon.
+
+First, let's simulate a new set of rasters and create a set of polygons for the filter layer.
+
 ```{r}
+# simulate data 
+var_list <- list()
+n <- 7
+
+ext <- sampling_extent<-siteselectr::sample_ext(x=25, y=25, 1500000, crs=4326)
+
+var1<-terra::rast(matrix(rnorm(3600, mean=0, sd=1), 
+                       nrow=60, ncol=60), crs="EPSG:4326")
+var2<-terra::rast(matrix(rnorm(6400, mean=0, sd=1), 
+                       nrow=80, ncol=80), crs="EPSG:4326")
+var3<-terra::rast(matrix(rnorm(6400, mean=0, sd=1), 
+                       nrow=80, ncol=80), crs="EPSG:4326")
+var4<-terra::rast(matrix(rnorm(3600, mean=0, sd=1), 
+                         nrow=60, ncol=60), crs="EPSG:4326")
+var5<-terra::rast(matrix(rnorm(3600, mean=0, sd=1), nrow=60, ncol=60), 
+                  crs="EPSG:4326")
+
+r_list <- rast_collect(var1, var2, var3, var4, var5)
+
+r_resampled<-rast_match(rast_list = r_list, 
+                        reference_layer = r_list[[1]], 
+                        extent = ext)
+
+r_stack <- rast_stack(r_resampled, extent = ext)
+
+# simulate polygons to mask rasters (our filter)
+f1 <- sample_ext(x=25, y=25, 200000, crs = 4326)
+f2 <- sample_ext(x=25, y=30, 200000, crs = 4326)
+f3 <- sample_ext(x=20, y=23, 200000, crs = 4326)
+f4 <- sample_ext(x=30, y=23, 200000, crs = 4326)
+f5 <- sample_ext(x=30, y=28, 200000, crs = 4326)
+f6 <- sample_ext(x=17, y=32, 200000, crs = 4326)
+
+
+fil <- rbind(f1, f2, f3, f4, f5, f6)
+
+plot(r_stack[[1]]) ; lines(ext, col='red', lwd=3); lines(fil, col='red', lwd = 2)
 ```
 
-## Citations
+With a raster stack and single shapefile that contains polygons which will be used to mask the raster data, we're ready to run `site_select_fil`.
+
+```{r}
+fil_after <- site_select_fil(long=25, lat=25, num=12, stack=r_stack,
+                                filter = fil, type = "after")
+
+fil_before <- site_select_fil(long=25, lat=25, num=12, stack=r_stack,
+                                filter = fil, type = "before")
+```
+
+We can view our sites on the filtered cells - some of them will be the same or similar between a priori or a posteriori filtering.
+
+```{r}
+after_xy <- xyFromCell(r_stack[[1]], fil_after)
+before_xy <- xyFromCell(r_stack[[1]], fil_before)
+
+plot(mask(r_stack[[1]], fil)) ; points(after_xy, pch = 19, col = "cyan", cex=2); points(before_xy, pch = 4, col = "red", cex=2)
+```
