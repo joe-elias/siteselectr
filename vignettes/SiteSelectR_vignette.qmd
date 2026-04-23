@@ -4,6 +4,8 @@ format: html
 editor: visual
 ---
 
+![](images/logo.png){fig-align="center" width="203"}
+
 ## Project Overview
 
 Monitoring networks are crucial for understanding how ecosystems respond to environmental change. Apparent trends can be driven by site selection bias towards easily accessed or interesting sites, not necessarily the most representative of the landscape, thereby encouraging misrepresented trends in temporal and spatial data. **siteselectr** is an r package made for simple site selection that optimizes envrionmental variation under common spatial and environmental constraints encountered when designing a monitoring network.
@@ -303,7 +305,7 @@ r_stack <- rast_stack(r_resampled, extent = ext)
 f1 <- sample_ext(x=25, y=25, 200000, crs = 4326)
 f2 <- sample_ext(x=25, y=30, 200000, crs = 4326)
 f3 <- sample_ext(x=20, y=23, 200000, crs = 4326)
-f4 <- sample_ext(x=30, y=23, 200000, crs = 4326)
+f4 <- sample_ext(x=30, y=16, 200000, crs = 4326)
 f5 <- sample_ext(x=30, y=28, 200000, crs = 4326)
 f6 <- sample_ext(x=17, y=32, 200000, crs = 4326)
 
