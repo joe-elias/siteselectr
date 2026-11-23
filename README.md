@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-![](siteselectr_vignette_files/figure-commonmark/logo.png){align="right" alt="siteselectr logo" height="300"} 
+<img src="siteselectr_vignette_files/figure-commonmark/logo.png" align="right" height="300"/>
 
 Monitoring networks are important for understanding how ecosystems respond to environmental change. Apparent trends can be driven by site selection bias towards easily accessed or interesting sites, not necessarily the most representative of the landscape, thereby encouraging misrepresented trends in temporal and spatial data. **siteselectr** is an r package made for representative site selection that optimizes environmental variation under common spatial and environmental constraints encountered when designing a monitoring network. Monitoring networks are important for understanding how ecosystems respond to environmental change. Apparent trends can be driven by site selection bias towards easily accessed or interesting sites, not necessarily the most representative of the landscape, thereby encouraging misrepresented trends in temporal and spatial data. **siteselectr** is an r package made for representative site selection that optimizes environmental variation under common spatial and environmental constraints encountered when designing a monitoring network.
 
