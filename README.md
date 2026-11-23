@@ -1,4 +1,7 @@
-<img src="vignettes/images/logo.png" width="400" height="450" alt="siteselectr logo">
+
+<figure class="float-right-img">
+  <img src="siteselectr_vignette_files/figure-commonmark/logo.png" alt="siteselectr logo" width="300" height="350"/>
+</figure>
 
 # siteselectr vignette
 
@@ -389,3 +392,7 @@ plot(r_stack[[3]]) ; points(weighted_xy, col='red', pch=19)
 ![](siteselectr_vignette_files/figure-commonmark/unnamed-chunk-26-1.png)
 
 ## Citations
+
+> Hijmans R, Brown A, Barbosa AM, Cordano E, Dyba K (2026). *terra: Spatial Data Analysis*. R package version 1.9-61, <https://github.com/rspatial/terra>.
+>
+> Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446, <https://doi.org/10.32614/RJ-2018-009>
