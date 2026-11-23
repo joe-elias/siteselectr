@@ -5,7 +5,7 @@
 \title{Modified version of new_distance function, based on the wmahalanobis function in the WMDB package (Wu, 2012).
 Used within the site_select_wt() function.}
 \usage{
-new_distance_wt(stack, weighted_layer, cells, magnitude, dat)
+new_distance_wt(stack, weighted_layer, cells, magnitude)
 }
 \arguments{
 \item{stack}{raster stack.}

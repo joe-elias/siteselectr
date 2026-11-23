@@ -32,7 +32,10 @@ rast_distance_wt <- function(stack, weighted_layer, magnitude){
   # 3. weighted mahalanobis calculation
   cov=cov(dat, use="pairwise.complete.obs") +
     diag(0.01, ncol(dat))
+
   center=colMeans(dat, na.rm = TRUE)
-  distance_matrix <- wt_distance(dat, center, cov, weight)
-  return(distance_matrix)
+
+  dm <- wt_distance(dat, center, cov, weight)
+
+  return(dm)
 }

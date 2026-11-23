@@ -2,7 +2,7 @@
 % Please edit documentation in R/new_distance.R
 \name{new_distance}
 \alias{new_distance}
-\title{This function creates a new matrix using the baseline (with selected cells) and comparison (without selected cells) matrices.}
+\title{This function creates a new matrix using the available (with selected cells) and selected (without selected cells) matrices.}
 \usage{
 new_distance(data, cells)
 }
@@ -15,5 +15,5 @@ new_distance(data, cells)
 a distance matrix that measures the dissimilarity between the original distance matrix - see rast_distance() function - and the original distance matrix minus already selected cells.
 }
 \description{
-This function creates a new matrix using the baseline (with selected cells) and comparison (without selected cells) matrices.
+This function creates a new matrix using the available (with selected cells) and selected (without selected cells) matrices.
 }

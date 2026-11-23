@@ -1,4 +1,4 @@
-#' Create a comparison  matrix to use in the site select function.
+#' Create a selected  matrix to use in the site select function.
 #'
 #' Produces a matrix of the original cell values except those chosen already for sampling sites.
 #'
@@ -6,10 +6,10 @@
 #'
 #' @param cells refers to the cells already chosen.
 #'
-#' @return a comparison matrix for the site_select() function. A matrix of data param with selected cells excluded.
+#' @return a selected matrix for the site_select() function. A matrix of data param with selected cells excluded.
 #' @export
 
-comparison<-function(data, cells){
+selected<-function(data, cells){
   comp<-data[-c(cells), ]
   return(comp)
 }

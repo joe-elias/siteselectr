@@ -8,8 +8,6 @@
 #' @export
 
 
-
-
 vect_to_rast <- function(vect, extent, res){
   obj<-sf::st_crop(vect, extent)
   rast_obj<-rast(st_as_sf(obj), res=res)

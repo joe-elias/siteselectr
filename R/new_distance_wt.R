@@ -14,7 +14,7 @@
 #'
 #' @export
 
-new_distance_wt<- function(stack, weighted_layer, cells, magnitude, dat) {
+new_distance_wt<- function(stack, weighted_layer, cells, magnitude) {
   dat <- as.matrix(stack)
 
   # create weight vector
@@ -30,17 +30,15 @@ new_distance_wt<- function(stack, weighted_layer, cells, magnitude, dat) {
 
   ref<-stack[[1]]
 
-  # define baseline and comparison groups
-  baseline <- dat[c(cells), ]
-  comparison <- dat[-c(cells), ]
-
-  weight <- weight
+  # define available and selected groups
+  available <- dat[c(cells), ]
+  selected <- dat[-c(cells), ]
 
   # calculate distance matrix
-  center<-colMeans(baseline, na.rm=T)
-  cov <- var(baseline, na.rm=T) + diag(0.01, nrow(var(baseline, na.rm=T)))
+  center<-colMeans(available, na.rm=T)
+  cov <- var(available, na.rm=T) + diag(0.01, nrow(var(available, na.rm=T)))
 
-  new_matrix_wt <- wt_distance(comparison, center, cov, weight)
+  new_matrix_wt <- wt_distance(selected, center, cov, weight)
 
   return(new_matrix_wt)
 }
