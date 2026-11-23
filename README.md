@@ -1,11 +1,4 @@
----
-
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
-![](siteselectr_vignette_files/figure-commonmark/logo.png){width="400" height="450"}
+<img src="vignettes/images/logo.png" width="400" height="450" alt="siteselectr logo">
 
 # siteselectr vignette
 
